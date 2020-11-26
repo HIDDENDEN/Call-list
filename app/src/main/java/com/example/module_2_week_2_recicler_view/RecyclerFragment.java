@@ -8,14 +8,17 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.zip.Inflater;
+import com.example.module_2_week_2_recicler_view.Mock.MockAdapter;
+import com.example.module_2_week_2_recicler_view.Mock.MockGenerator;
 
 public class RecyclerFragment extends Fragment {
 
     //наш список
-    private RecyclerView recycler;
+    private RecyclerView mRecycler;
+    private final MockAdapter mMockAdapter = new MockAdapter();
 
     public static RecyclerFragment newInstance() {
         return new RecyclerFragment();
@@ -31,6 +34,15 @@ public class RecyclerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
         //находим спсиок
-        recycler = view.findViewById(R.id.recycler);
+        mRecycler = view.findViewById(R.id.recycler);
+    }
+
+    //когда уже есть доступ к контексту
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecycler.setAdapter(mMockAdapter);
+        mMockAdapter.addData(MockGenerator.Generate(20));
     }
 }
