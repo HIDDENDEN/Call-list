@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Module_2_week_2_recicler_view</string>
+    <string name="error_text">Something went wrong... Please, try again later</string>
 </resources>
