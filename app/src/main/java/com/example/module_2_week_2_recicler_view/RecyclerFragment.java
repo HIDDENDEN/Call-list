@@ -1,5 +1,6 @@
 package com.example.module_2_week_2_recicler_view;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -17,9 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.module_2_week_2_recicler_view.Mock.MockAdapter;
-import com.example.module_2_week_2_recicler_view.Mock.MockGenerator;
-
 import java.util.Random;
 
 public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, LoaderManager.LoaderCallbacks<Cursor> {
@@ -35,6 +33,25 @@ public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnR
     private View mErrorView;
 
     private Random mRandom = new Random();
+
+    //поле с lister-ом. Мы передаем его из Activity во фрагмент. Затем передадим его в Adapter (в onActivityCreated)
+    private ContactsAdapter.OnItemClickListener mListener;
+
+    //записываем значение в поле
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof ContactsAdapter.OnItemClickListener){
+            mListener = (ContactsAdapter.OnItemClickListener) context;
+        }
+    }
+
+    //зануляем поле
+    @Override
+    public void onDetach() {
+        mListener=null;//чтобы упростить жизнь сборщику мусора
+        super.onDetach();
+    }
 
     public static RecyclerFragment newInstance() {
         return new RecyclerFragment();
@@ -67,8 +84,9 @@ public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        mRecycler.setAdapter(mMockAdapter);
         mRecycler.setAdapter(mContactsAdapter);
+        mContactsAdapter.setListener(mListener);
+
 
 
     }
@@ -77,42 +95,10 @@ public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Override
     public void onRefresh() {
 
-//        //post на любом view элементе работает, как любой handler на main треде. Просто постит сообщение в message queue
-//        mSwipeRefreshLayout.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                int count = mRandom.nextInt(4);
-//
-//                if (count == 0) {
-//                    showError();
-//                } else {
-//                    showData(count);
-//                }
-//
-//
-//                //прячем индикатор прогресса
-//                if (mSwipeRefreshLayout.isRefreshing()) {//т.е. крутится прямо сейчас
-//                    mSwipeRefreshLayout.setRefreshing(false);//убрали прокрутку thumb-a
-//                }
-//            }
-//        }, 2000);
-
         //создаем Loader
         getLoaderManager().restartLoader(0, null, this);
-
     }
 
-//    private void showData(int count) {
-//        mMockAdapter.addData(MockGenerator.Generate(5), true);
-//        mErrorView.setVisibility(View.GONE);
-//        mRecycler.setVisibility(View.VISIBLE);
-//    }
-//
-//    private void showError() {
-//        mErrorView.setVisibility(View.VISIBLE);
-//        mRecycler.setVisibility(View.GONE);
-//    }
 
     // курсор - это таблица
     @NonNull

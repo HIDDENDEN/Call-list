@@ -5,6 +5,7 @@ import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -16,6 +17,9 @@ import com.example.module_2_week_2_recicler_view.Mock.MockHolder;
 public class ContactsAdapter extends RecyclerView.Adapter<MockHolder> {
 
     private Cursor mCursor;
+
+    //передали из Fragment. Теперь нужно передать его дальше в Holder
+    private OnItemClickListener mListener;
 
     @NonNull
     @Override
@@ -41,6 +45,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<MockHolder> {
             );
 
             holder.bind(new Mock(name,id));
+
+            holder.setListener(mListener);
         }
     }
 
@@ -57,5 +63,15 @@ public class ContactsAdapter extends RecyclerView.Adapter<MockHolder> {
             notifyDataSetChanged();
             // поменяли 2 курсора местами
         }
+    }
+
+    public void setListener(OnItemClickListener listener) {
+        mListener = listener;
+    }
+
+    //будет при нажатии а ээлемент списка реализововаться логика которую мы определим наследниками интерфейса
+    //реализововать будем в Activity
+    public interface OnItemClickListener {
+        void onItemClick(String id);
     }
 }
