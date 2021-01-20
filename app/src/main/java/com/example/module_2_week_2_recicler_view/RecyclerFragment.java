@@ -5,8 +5,12 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,6 +64,7 @@ public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnR
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         return inflater.inflate(R.layout.fr_recycler, container, false);
     }
 
@@ -131,4 +136,34 @@ public class RecyclerFragment extends Fragment implements SwipeRefreshLayout.OnR
     public void onLoaderReset(@NonNull Loader<Cursor> loader) {
 
     }
+
+    //menu
+    //для вызова меню во фрагменте!!!
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    // реакция на выбор элементов меню
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        //проверяем какой элемент меню выбран
+        switch (item.getItemId()) {
+            case R.id.menu_stop_execution:
+                //todo:  stop task
+                if (LoaderManager.getInstance(getActivity()).hasRunningLoaders() == true) {
+                    LoaderManager.getInstance(getActivity()).destroyLoader(LOADER_IDENTIFICATOR);
+                    Toast.makeText(getActivity(),"Call denied",Toast.LENGTH_LONG).show();
+                }
+                break;
+
+
+            default:
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    public static final int LOADER_IDENTIFICATOR = 21;
 }

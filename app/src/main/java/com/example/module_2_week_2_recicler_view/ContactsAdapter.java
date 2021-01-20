@@ -23,6 +23,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<MockHolder> {
 
     @NonNull
     @Override
+    //указываем каким элементом будем надувать
     public MockHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //в parent хранится контекст
 
@@ -33,7 +34,7 @@ public class ContactsAdapter extends RecyclerView.Adapter<MockHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MockHolder holder, int position) {
-        //нужно получить данные из курсора и сормить холдеру, чтобы он их показал
+        //нужно получить данные из курсора и скормить холдеру, чтобы он их показал
         if (mCursor.moveToPosition(position)) {//возвращает true , если курсор успешно переместился на эту позицию
 
             String name = mCursor.getString(
